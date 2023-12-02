@@ -1,7 +1,14 @@
 
 import streamlit as st
 import subprocess
-subprocess.call(["pip", "install", "-r", "./requirements.txt"])
+with open("./requirements.txt", "r") as f:
+    requirements = f.read().splitlines()
+for requirement in requirements:
+    try:
+        subprocess.run(["pip", "show", requirement], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    except subprocess.CalledProcessError:
+        subprocess.run(["pip", "install", requirement], check=True)
+
 import torch
 from skimage.io import imread as imread
 from sklearn.utils import resample
